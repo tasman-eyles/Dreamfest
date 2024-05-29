@@ -19,6 +19,15 @@ export async function getEventsByDay(day: string) {
   const events = await db('events')
     .where({ day })
     .join('locations', 'events.location_id', 'locations.id')
+    .select(
+      'events.id',
+      'day',
+      'time',
+      'events.name as eventName',
+      'events.description',
+      'locations.name as locationName',
+    )
+  console.log(events)
   return events as Event[]
 }
 
@@ -39,8 +48,26 @@ export async function updateLocation(
   description: string,
 ) {
   const updatedLocation = await db('locations')
-  .where({ id })
-  .update({ name: name, description: description})
-  .select('id', 'name', 'description')
+    .where({ id })
+    .update({ name: name, description: description })
+    .select('id', 'name', 'description')
   return updatedLocation as Location[]
+}
+
+export async function addNewEvent({
+  locationId,
+  day,
+  time,
+  name,
+  description,
+}: EventData) {
+  const newEventId = await db('events').insert({
+    location_id: locationId,
+    day,
+    time,
+    name,
+    description,
+  })
+  console.log(newEventId[0])
+  return newEventId[0]
 }
