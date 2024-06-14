@@ -11,6 +11,7 @@ router.get('/:day', async (req, res, next) => {
     const day = validateDay(req.params.day)
     // TODO: replace this data with the results of calling db.getEventsByDay
     const events = await db.getEventsByDay(day)
+    console.log(events)
     res.json({ day, events })
   } catch (e) {
     next(e)

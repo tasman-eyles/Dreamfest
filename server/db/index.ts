@@ -8,7 +8,7 @@ type Environment = 'production' | 'test' | 'development'
 const environment = (process.env.NODE_ENV || 'development') as Environment
 const config = knexFile[environment]
 export const connection = knex(config)
-const db = knex(config)
+const db = connection
 
 export async function getAllLocations() {
   const locations = await db('locations') // TODO: replace this with your knex query
@@ -70,4 +70,8 @@ export async function addNewEvent({
   })
   console.log(newEventId[0])
   return newEventId[0]
+}
+
+export async function deleteEvent(id: number) {
+  return await connection('events').where({ id }).delete()
 }
